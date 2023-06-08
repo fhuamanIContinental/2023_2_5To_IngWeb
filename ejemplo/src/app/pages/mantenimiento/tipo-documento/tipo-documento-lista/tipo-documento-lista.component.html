@@ -1,0 +1,53 @@
+<div class="container mt-5">
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h3 class="text-danger text-uppercase text-center"> Mantenimiento de tipos de documento </h3>
+        </div>
+        <div class="card-body">
+            <h4>aquí ira nuestra sección de filtros</h4>
+        </div>
+    </div>
+
+    <div *ngIf="mostrarFrmRegistro">
+        <app-tipo-documento-registro [title]="tituloModal" [item]="tipoDocumentoSeleccionado"
+            (closeModalEmmit)="recibirRespuestaFrm($event)"></app-tipo-documento-registro>
+    </div>
+
+
+    <div class="card bg-light mb-3 ">
+        <div class="card-header">
+            <h3 class="text-danger text-uppercase text-center"> Lista de tipos de documento </h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>
+                            <button (click)="nuevoItem()" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus-circle fa-2x"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let d of tiposDocumentos">
+                        <td> {{d.id}} </td>
+                        <td> {{d.codigo}} </td>
+                        <td> {{d.descripcion}} </td>
+                        <td>
+                            <button (click)="editarItem(d)" class="btn btn-sm btn-primary ">
+                                <i class="fas fa-edit fa-2x"></i>
+                            </button>
+                            <button (click)="eliminarItem(d.id)" class="btn btn-sm btn-danger ms-3">
+                                <i class="fas fa-trash fa-2x"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

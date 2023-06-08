@@ -1,0 +1,22 @@
+<div class="container">
+    <h1>MANTENIMIENTO DE PRODUCTO</h1>
+
+    <br><br><br>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>NOMBRE</th>
+                <th>CATEGORÍA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- simil a un FOR // FOREACH -->
+            <tr *ngFor="let prod of productos">
+                <td> {{prod.nombre}} </td>
+                <td> {{prod.categoria}} </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

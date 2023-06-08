@@ -1,0 +1,40 @@
+<div class="modal-header bg-dark text-white">
+    <h4 class="modal-title pull-left text-danger">{{title}}</h4>
+    <button type="button" class="btn btn-sm btn-danger" (click)="closeModal(false)">
+        <i class="fas fa-times fa-2x"></i>
+    </button>
+</div>
+<div class="modal-body bg-dark text-white">
+    <form [formGroup]="myForm" class="">
+        <div class="row">
+            <div class="col-12 mt-3">
+                <div class="form-group">
+                    <label for="">ID</label>
+                    <input formControlName="id" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="form-group">
+                    <label for="">CÓDIGO</label>
+                    <input formControlName="codigo" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="form-group">
+                    <label for="">DESCRIPCIÓN</label>
+                    <input formControlName="descripcion" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="form-group">
+                    <button (click)="closeModal(false)" class="float-end btn btn-sm btn-danger ms-2">
+                        <i class="fas fa-ban"></i> Cancelar
+                    </button>
+                    <button (click)="guardar()" class="float-end btn btn-sm btn-primary ms-2">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
