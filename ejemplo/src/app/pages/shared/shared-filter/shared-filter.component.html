@@ -1,0 +1,37 @@
+<form [formGroup]="myForm">
+    <div class="row">
+        <div class="col-3" *ngFor="let item of filters">
+            <div class="form-group">
+                <label for=""> <strong> {{item.label}} </strong> </label>
+                <div *ngIf="item.type == filterOption.TextControl">
+                    <input (keyup.enter)="search()" formControlName="{{ item.name }}" type="text" class="form-control"
+                        placeholder="{{ item.label }}" />
+                </div>
+
+                <div *ngIf="item.type == filterOption.ComboBox">
+                    <select class="form-select" formControlName="{{ item.name }}">
+                        <option value="null">Todos</option>
+                        <option *ngFor="let d of item.data" [value]="d.value">
+                            {{ d.label }}
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="form-group">
+                <button (click)="search()" class="ms-2 btn btn-sm btn-primary">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button (click)="clear()" class="ms-2 btn btn-sm btn-danger">
+                    <i class="fas fa-broom"></i> Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

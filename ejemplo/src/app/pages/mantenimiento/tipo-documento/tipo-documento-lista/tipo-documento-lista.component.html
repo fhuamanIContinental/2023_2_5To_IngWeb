@@ -4,14 +4,16 @@
             <h3 class="text-danger text-uppercase text-center"> Mantenimiento de tipos de documento </h3>
         </div>
         <div class="card-body">
-            <h4>aquí ira nuestra sección de filtros</h4>
+            <app-shared-filter [filters]="filtersForm"
+            (resFilterEmmit)="recibirNuevosFiltros($event)"
+            
+            ></app-shared-filter>
         </div>
     </div>
 
-    <div *ngIf="mostrarFrmRegistro">
-        <app-tipo-documento-registro [title]="tituloModal" [item]="tipoDocumentoSeleccionado"
-            (closeModalEmmit)="recibirRespuestaFrm($event)"></app-tipo-documento-registro>
-    </div>
+
+
+
 
 
     <div class="card bg-light mb-3 ">
@@ -26,7 +28,7 @@
                         <th>Código</th>
                         <th>Descripción</th>
                         <th>
-                            <button (click)="nuevoItem()" class="btn btn-sm btn-primary">
+                            <button (click)="nuevoItem(tmpRegister)" class="btn btn-sm btn-primary">
                                 <i class="fas fa-plus-circle fa-2x"></i>
                             </button>
                         </th>
@@ -38,7 +40,7 @@
                         <td> {{d.codigo}} </td>
                         <td> {{d.descripcion}} </td>
                         <td>
-                            <button (click)="editarItem(d)" class="btn btn-sm btn-primary ">
+                            <button (click)="editarItem(d,tmpRegister)" class="btn btn-sm btn-primary ">
                                 <i class="fas fa-edit fa-2x"></i>
                             </button>
                             <button (click)="eliminarItem(d.id)" class="btn btn-sm btn-danger ms-3">
@@ -48,6 +50,18 @@
                     </tr>
                 </tbody>
             </table>
+
+            <pagination [totalItems]="cantidadRegistrosTotal" [(ngModel)]="currentPage"
+                [itemsPerPage]="2"
+                (pageChanged)="pageChanged($event)"
+            
+            ></pagination>
         </div>
     </div>
 </div>
+
+
+<ng-template #tmpRegister>
+    <app-tipo-documento-registro [title]="tituloModal" [item]="tipoDocumentoSeleccionado"
+        [accionRealizar]="accionRealizar" (closeModalEmmit)="recibirRespuestaFrm($event)"></app-tipo-documento-registro>
+</ng-template>

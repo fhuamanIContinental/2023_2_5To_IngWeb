@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +22,10 @@ import { CategoriaListComponent } from './pages/mantenimiento/categoria/categori
 import { CategoriaRegistroComponent } from './pages/mantenimiento/categoria/categoria-registro/categoria-registro.component';
 import { TipoDocumentoListaComponent } from './pages/mantenimiento/tipo-documento/tipo-documento-lista/tipo-documento-lista.component';
 import { TipoDocumentoRegistroComponent } from './pages/mantenimiento/tipo-documento/tipo-documento-registro/tipo-documento-registro.component';
+import { SharedFilterComponent } from './pages/shared/shared-filter/shared-filter.component';
+import { SharedTablePaggingComponent } from './pages/shared/shared-table-pagging/shared-table-pagging.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,16 +42,23 @@ import { TipoDocumentoRegistroComponent } from './pages/mantenimiento/tipo-docum
     CategoriaListComponent,
     CategoriaRegistroComponent,
     TipoDocumentoListaComponent,
-    TipoDocumentoRegistroComponent
+    TipoDocumentoRegistroComponent,
+    SharedFilterComponent,
+    SharedTablePaggingComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule, // SIRVE PARA REALIZAR LAS ANIMACIÓN EN EL FUNCIONAMIENTO DE ALGUNOS COMPONENTES (QUE REQUIERAN PARTE DE ANIMACIÓN)
     AppRoutingModule,
     FormsModule, //nos permite trabajar en base a formularios
     ReactiveFormsModule,  // nos permite trabajar con formularios reactivos
     HttpClientModule // nos permite realizar comunicacion por medio del protocolo HTTP
+    , ModalModule.forRoot()
+    , PaginationModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

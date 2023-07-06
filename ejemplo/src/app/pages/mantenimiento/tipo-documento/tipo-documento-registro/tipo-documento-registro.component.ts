@@ -52,6 +52,8 @@ export class TipoDocumentoRegistroComponent implements OnInit {
 
   guardar() {
     let frmValue: TipoDocumentoRequest = this.myForm.getRawValue();
+    console.log("this.accionRealizar",this.accionRealizar);
+    
     switch (this.accionRealizar) {
       case 1: this.crearRegistro(frmValue); break;
       case 2: this.actualizarRegistro(frmValue); break;

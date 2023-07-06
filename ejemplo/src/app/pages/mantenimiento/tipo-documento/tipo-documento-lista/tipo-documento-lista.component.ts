@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { typeFilterConst } from 'src/app/constants/general.const';
+import { FilterForm } from 'src/app/modesl/filter-form';
+import { FilterPaginationRequest } from 'src/app/modesl/filter-pagination-request.model';
+import { FilterPaginationResponse } from 'src/app/modesl/filter-pagination-response.model';
+import { ItemFilter } from 'src/app/modesl/generic-filter-request.model';
 import { TipoDocumentoResponse } from 'src/app/modesl/tipo-documento-response.model';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import Swal from 'sweetalert2';
@@ -16,10 +23,19 @@ export class TipoDocumentoListaComponent implements OnInit {
   tipoDocumentoSeleccionado: TipoDocumentoResponse = new TipoDocumentoResponse();
   tituloModal: string = "";
   accionRealizar: number = 0; // 1 ==> crear || 2 para actualizar
+  modalRef?: BsModalRef;
+  filtersForm: FilterForm[] = [];
+  genericFilter: FilterPaginationRequest = new FilterPaginationRequest();
+  cantidadRegistrosTotal: number = 0;
+  currentPage = 1;
+  page: number = 1;
   constructor(
-    private _tipoDocumentoService: TipoDocumentoService
+    private _tipoDocumentoService: TipoDocumentoService,
+    private modalService: BsModalService
   ) {
-
+    this.filtersForm.push(new FilterForm("id", "ID", typeFilterConst.TextControl, undefined));
+    this.filtersForm.push(new FilterForm("codigo", "CÓDIGO", typeFilterConst.TextControl, undefined));
+    this.filtersForm.push(new FilterForm("descripcion", "DESCRIPCIÓN", typeFilterConst.TextControl, undefined));
   }
 
 
@@ -29,40 +45,53 @@ export class TipoDocumentoListaComponent implements OnInit {
    */
   ngOnInit(): void {
 
-    console.log("ON INIT");
+    //console.log("ON INIT");
     this.listarTiposDocumento();
   }
 
 
   listarTiposDocumento() {
-    this._tipoDocumentoService.getAll().subscribe({
-      next: (data: TipoDocumentoResponse[]) => {
+    // this._tipoDocumentoService.getAll().subscribe({
+    //   next: (data: TipoDocumentoResponse[]) => {
+    //     console.log("tipos de documento", data);
+    //     this.tiposDocumentos = data;
+    //   },
+    //   error: () => { },
+    //   complete: () => { }
+    // });
+
+
+    this._tipoDocumentoService.getByFilter(this.genericFilter).subscribe({
+      next: (data: FilterPaginationResponse<TipoDocumentoResponse>) => {
         console.log("tipos de documento", data);
-        this.tiposDocumentos = data;
+        this.tiposDocumentos = data.lista;
+        this.cantidadRegistrosTotal = data.cantidadTotalRegistros;
       },
       error: () => { },
       complete: () => { }
     });
+
   }
 
 
-  nuevoItem() {
+  nuevoItem(template: TemplateRef<any>) {
     this.accionRealizar = 1;
     this.tipoDocumentoSeleccionado = new TipoDocumentoResponse();
     this.tituloModal = "CREAR TIPO DOCUMENTO";
-    setTimeout(() => {
-      this.mostrarFrmRegistro = true;
-    }, 200);
+    // setTimeout(() => {
+    //   this.mostrarFrmRegistro = true;
+    // }, 200);
+    this.openModal(template);
   }
 
-  editarItem(item: TipoDocumentoResponse) {
+  editarItem(item: TipoDocumentoResponse, template: TemplateRef<any>) {
     this.accionRealizar = 2;
     this.tipoDocumentoSeleccionado = item;
     this.tituloModal = "EDITAR TIPO DOCUMENTO";
-    setTimeout(() => {
-      this.mostrarFrmRegistro = true;
-    }, 200);
-
+    // setTimeout(() => {
+    //   this.mostrarFrmRegistro = true;
+    // }, 200);
+    this.openModal(template);
   }
 
   eliminarItem(id: number) {
@@ -103,9 +132,6 @@ export class TipoDocumentoListaComponent implements OnInit {
       return false;
     });
 
-
-
-
     console.log("hizo clic en ==> eliminarItem");
   }
 
@@ -114,7 +140,36 @@ export class TipoDocumentoListaComponent implements OnInit {
       this.listarTiposDocumento();
     }
     this.accionRealizar = 0;
-    this.mostrarFrmRegistro = false;
+
+    // this.mostrarFrmRegistro = false;
+    this.closeModal();
   }
 
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  closeModal() {
+    this.modalRef?.hide();
+  }
+
+  recibirNuevosFiltros(filtros: ItemFilter[]) {
+
+    this.genericFilter = new FilterPaginationRequest();
+    this.genericFilter.filtros = filtros;
+    debugger;
+    this.listarTiposDocumento();
+
+
+  }
+
+  pageChanged(event: PageChangedEvent): void {
+    this.page = event.page;
+    this.genericFilter.pagina = event.page;
+    this.listarTiposDocumento();
+  }
+
+
 }
+
